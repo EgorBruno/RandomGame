@@ -1,0 +1,229 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Выбор случайного дежурного</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: black; /* Черный фон */
+            color: white; /* Цвет текста по умолчанию */
+            overflow: hidden; /* Запрет на прокрутку страницы */
+            user-select: none; /* Запрет на выделение текста */
+            position: fixed; /* Фиксированное положение страницы */
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            font-family: Arial, sans-serif; /* Шрифт */
+        }
+
+        h1 {
+            margin: 20px 0; /* Отступы для заголовка */
+            font-size: 32px; /* Увеличение размера заголовка */
+            text-align: center; /* Центрирование текста заголовка */
+            animation: fadeIn 2s; /* Анимация появления заголовка */
+            color: #ffcc00; /* Цвет заголовка */
+            animation: colorChange 5s infinite; /* Анимация смены цвета заголовка */
+        }
+
+        @keyframes colorChange {
+            0% { color: #ff0000; } /* Красный */
+            20% { color: #ff7f00; } /* Оранжевый */
+            40% { color: #ffff00; } /* Желтый */
+            60% { color: #7fff00; } /* Зеленый */
+            80% { color: #00ffff; } /* Голубой */
+            100% { color: #0000ff; } /* Синий */
+        }
+
+        .wheel {
+            width: 300px;
+            height: 300px;
+            border: 16px solid; /* Сделаем границы разноцветными */
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 5s cubic-bezier(0.25, 0.1, 0.25, 1);
+            font-size: 48px; /* Увеличение размера текста фамилий */
+            font-weight: bold;
+            text-align: center; /* Центрирование текста */
+            color: white; /* Цвет текста */
+            background-color: transparent; /* Прозрачный фон колеса */
+            animation: colorChangeBorder 5s infinite; /* Анимация смены цвета границы */
+        }
+
+        @keyframes colorChangeBorder {
+            0% { border-color: red; } /* Красный */
+            20% { border-color: orange; } /* Оранжевый */
+            40% { border-color: yellow; } /* Желтый */
+            60% { border-color: green; } /* Зеленый */
+            80% { border-color: blue; } /* Синий */
+            100% { border-color: purple; } /* Фиолетовый */
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        .button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #4caf50; /* Цвет фона кнопки */
+            border: none;
+            border-radius: 5px; /* Закругленные углы кнопки */
+            color: white; /* Цвет текста кнопки */
+            transition: background-color 0.3s; /* Плавный переход фона */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Тень кнопки */
+        }
+
+        .button:hover {
+            background-color: #45a049; /* Цвет фона кнопки при наведении */
+        }
+
+        .smiley {
+            position: absolute;
+            font-size: 48px;
+            opacity: 1;
+            animation: fly 1s forwards;
+        }
+
+        @keyframes fly {
+            0% { transform: translate(0, 0); opacity: 1; }
+            100% { transform: translate(var(--x), var(--y)); opacity: 0; }
+        }
+
+        .confetti {
+            position: absolute;
+            font-size: 20px;
+            opacity: 1;
+            animation: drop 2s forwards;
+        }
+
+        @keyframes drop {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(100vh); opacity: 0; }
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Выбор случайного дежурного</h1>
+    <div class="wheel" id="wheel">Фамилия</div>
+    <button class="button" id="spin-button">Крутить колесо</button>
+    <div id="smileys"></div>
+
+    <script>
+        const students = [
+            "Величко",
+            "Головчанський",
+            "Голуб",
+            "Игонин",
+            "Кононова",
+            "Кравченко",
+            "Лапенко",
+            "Маджуга",
+            "Макриди",
+            "Нисковский",
+            "Павленко",
+            "Пахомов",
+            "Попов",
+            "Редькин",
+            "Рохлин",
+            "Селина",
+            "Слободян",
+            "Текутьева",
+            "Уваров",
+            "Хилл",
+            "Хламов",
+            "Члалян",
+            "Шаршавицкий",
+            "Шепель",
+            "Шофайзиев"
+        ];
+
+        const wheel = document.getElementById('wheel');
+        const spinButton = document.getElementById('spin-button');
+        const smileysContainer = document.getElementById('smileys');
+
+        function spinWheel() {
+            let spins = 10; // количество полных оборотов
+            const randomIndex = Math.floor(Math.random() * students.length);
+            const angleToSpin = 360 * spins; // Только вращение
+            wheel.style.transform = `rotate(${angleToSpin}deg)`;
+
+            let currentIndex = 0;
+            const interval = setInterval(() => {
+                currentIndex = (currentIndex + 1) % students.length;
+                wheel.innerText = students[currentIndex]; // Обновляем фамилию в колесе
+            }, 300); // Обновление фамилии каждые 300 мс
+
+            setTimeout(() => {
+                clearInterval(interval);
+                wheel.innerText = students[randomIndex]; // Устанавливаем окончательную фамилию
+                showSmileys(); // Показать анимацию смайлов
+                showConfetti(); // Запуск анимации серпантинов
+            }, 3000); // Остановка обновления через 3 секунды
+        }
+
+        function showSmileys() {
+            const smileys = ['🎉', '🎊', '🎈', '✨', '💫'];
+
+            for (let i = 0; i < 5; i++) { // Показать 5 смайлов
+                const sm = document.createElement('div');
+                sm.classList.add('smiley');
+                sm.innerText = smileys[Math.floor(Math.random() * smileys.length)];
+                // Устанавливаем случайные координаты и направление
+                sm.style.setProperty('--x', `${(Math.random() - 0.5) * 400}px`); // Случайное движение по X
+                sm.style.setProperty('--y', `${(Math.random() - 1) * 200}px`); // Случайное движение по Y
+                sm.style.left = `${Math.random() * 100}vw`; // Начальное положение по X
+                sm.style.top = `${Math.random() * 50}vh`; // Начальное положение по Y
+                smileysContainer.appendChild(sm);
+
+                // Удаление смайлов после анимации
+                setTimeout(() => {
+                    sm.remove();
+                }, 1000); // Удалить через 1 секунду
+            }
+        }
+
+        function showConfetti() {
+            const colors = ['🎉', '🎊', '🎈', '✨', '💫'];
+            const count = 30; // Количество серпантинов
+
+            for (let i = 0; i < count; i++) {
+                const confetti = document.createElement('div');
+                confetti.classList.add('confetti');
+                confetti.innerText = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.left = `${Math.random() * window.innerWidth}px`;
+                confetti.style.top = `0px`; // Начальная позиция сверху
+                smileysContainer.appendChild(confetti);
+
+                // Добавление случайного движения
+                confetti.style.setProperty('animation', `drop 2s forwards`);
+                
+                               // Удаление серпантинов после анимации
+                setTimeout(() => {
+                    confetti.remove();
+                }, 2000); // Удалить через 2 секунды, когда анимация завершится
+            }
+        }
+
+        // Добавление обработчика события на кнопку
+        spinButton.addEventListener('click', spinWheel);
+    </script>
+</body>
+
+</html>
