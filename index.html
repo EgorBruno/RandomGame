@@ -1,221 +1,122 @@
 <!DOCTYPE html>
-
 <html lang="ru">
 
 <head>
-
   <meta charset="UTF-8">
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Рандомайзер дежурного</title>
-
   <style>
-
     body {
-
       margin: 0;
-
       padding: 0;
-
       display: flex;
-
       justify-content: center;
-
       align-items: center;
-
       height: 100vh;
-
-      background: radial-gradient(circle, #0f2027, #203a43, #2c5364);
-
-      color: #fff;
-
+      background-color: #0d1117;
       font-family: 'Roboto', sans-serif;
-
-      text-align: center;
-
+      color: #c9d1d9;
     }
-
-
 
     #container {
-
       position: relative;
-
-      width: 400px;
-
-      padding: 50px;
-
-      border-radius: 20px;
-
-      background: rgba(255, 255, 255, 0.1);
-
-      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-
-      backdrop-filter: blur(10px);
-
-      border: 1px solid rgba(255, 255, 255, 0.18);
-
+      width: 450px;
+      padding: 40px;
+      background: #161b22;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
+      text-align: center;
     }
-
-
 
     #container h1 {
-
-      font-size: 2rem;
-
-      margin-bottom: 20px;
-
+      font-size: 2.5rem;
+      margin-bottom: 30px;
+      color: #58a6ff;
+      text-shadow: 2px 2px 8px rgba(0, 255, 255, 0.5);
     }
-
-
 
     #nameDisplay {
-
-      font-size: 1.5rem;
-
-      margin: 20px 0;
-
+      font-size: 1.75rem;
+      margin: 30px 0;
       font-weight: bold;
-
-      letter-spacing: 2px;
-
-      color: #00FFAF;
-
-      transition: 0.3s ease-in-out;
-
+      letter-spacing: 3px;
+      color: #f0f6fc;
+      transition: color 0.5s ease;
     }
-
-
 
     #randomButton {
-
-      padding: 10px 20px;
-
-      font-size: 1rem;
-
-      background: #00FFAF;
-
-      color: #000;
-
+      padding: 12px 25px;
+      font-size: 1.1rem;
+      background: linear-gradient(145deg, #238636, #28a745);
+      color: #f0f6fc;
       border: none;
-
-      border-radius: 50px;
-
+      border-radius: 30px;
       cursor: pointer;
-
-      transition: background 0.3s ease;
-
+      transition: background 0.3s ease, transform 0.2s ease;
     }
-
-
 
     #randomButton:hover {
-
-      background: #00FFA1;
-
+      background: linear-gradient(145deg, #28a745, #2ea043);
+      transform: scale(1.05);
     }
-
-
-
-    /* Анимация мерцания */
 
     @keyframes blink {
-
       0% {
-
         opacity: 1;
-
       }
-
       50% {
-
         opacity: 0;
-
       }
-
       100% {
-
         opacity: 1;
-
       }
-
     }
 
+    /* Добавление легкого светящегося эффекта для имени */
+    #nameDisplay.active {
+      text-shadow: 0 0 10px #58a6ff, 0 0 20px #58a6ff, 0 0 30px #58a6ff;
+    }
   </style>
-
 </head>
 
 <body>
-
   <div id="container">
-
     <h1>Выбор дежурного</h1>
-
     <div id="nameDisplay">Нажми кнопку!</div>
-
     <button id="randomButton">Выбрать дежурного</button>
-
   </div>
 
-
-
   <script>
-
     const names = [
-
-      "Величко Кристина", "Головчанський Даниил", "Голуб Владимир", "Игонин Матвей", 
-
-      "Кононова Анастасия", "Кравченко Валентин", "Лапенко Семен", "Маджуга Павел", 
-
-      "Макриди Михаил", "Нисковский Виктор", "Павленко Анна", "Пахомов Роман", 
-
-      "Попов Марк", "Редькин Вадим", "Рохлин Давид", "Селина Анастасия", 
-
-      "Слободян Даниил", "Текутьева Надежда", "Уваров Артем", "Хилл Елисей", 
-
-      "Хламов Андрей", "Члалян Артур", "Шаршавицкий Михаил", "Шепель Екатерина", 
-
+      "Величко Кристина", "Головчанський Даниил", "Голуб Владимир", "Игонин Матвей",
+      "Кононова Анастасия", "Кравченко Валентин", "Лапенко Семен", "Маджуга Павел",
+      "Макриди Михаил", "Нисковский Виктор", "Павленко Анна", "Пахомов Роман",
+      "Попов Марк", "Редькин Вадим", "Рохлин Давид", "Селина Анастасия",
+      "Слободян Даниил", "Текутьева Надежда", "Не дежурю", "Хилл Елисей",
+      "Хламов Андрей", "Члалян Артур", "Шаршавицкий Михаил", "Шепель Екатерина",
       "Шофайзиев Саид"
-
     ];
 
-
-
     const nameDisplay = document.getElementById("nameDisplay");
-
     const randomButton = document.getElementById("randomButton");
 
-
-
     randomButton.addEventListener("click", () => {
-
       let count = 0;
+      nameDisplay.classList.remove('active');
+      nameDisplay.style.animation = 'none'; // Убираем мерцание перед началом нового выбора
 
       const interval = setInterval(() => {
-
         nameDisplay.textContent = names[Math.floor(Math.random() * names.length)];
-
         count++;
 
-
-
         if (count > 20) {
-
           clearInterval(interval);
-
-          // Мерцание имени после выбора
-
-          nameDisplay.style.animation = "blink 1s infinite";
-
+          nameDisplay.classList.add('active'); // Добавляем светящийся эффект
+          nameDisplay.style.animation = 'blink 1s infinite';
         }
-
       }, 100);
-
     });
-
   </script>
-
 </body>
 
 </html>
