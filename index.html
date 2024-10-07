@@ -13,51 +13,66 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
-      background-color: #0d1117;
-      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #2e0202, #000);
+      font-family: 'Times New Roman', sans-serif;
       color: #c9d1d9;
+      overflow: hidden;
     }
 
     #container {
       position: relative;
       width: 450px;
-      padding: 40px;
-      background: #161b22;
-      border-radius: 15px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.7);
+      padding: 50px;
+      background: linear-gradient(145deg, #3b0000, #1a0000);
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8);
       text-align: center;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    #container:hover {
+      transform: scale(1.03);
     }
 
     #container h1 {
-      font-size: 2.5rem;
-      margin-bottom: 30px;
-      color: #58a6ff;
-      text-shadow: 2px 2px 8px rgba(0, 255, 255, 0.5);
+      font-size: 2.8rem;
+      margin-bottom: 40px;
+      color: #ff3838;
+      text-shadow: 2px 2px 12px rgba(255, 56, 56, 0.8);
     }
 
     #nameDisplay {
-      font-size: 1.75rem;
-      margin: 30px 0;
+      font-size: 2rem;
+      margin: 40px 0;
       font-weight: bold;
-      letter-spacing: 3px;
-      color: #f0f6fc;
-      transition: color 0.5s ease;
+      letter-spacing: 5px;
+      color: #fff;
+      transition: color 0.5s ease, transform 0.3s ease;
+      transform-origin: center;
+    }
+
+    #nameDisplay.active {
+      text-shadow: 0 0 15px #ff3838, 0 0 30px #ff3838, 0 0 45px #ff3838;
+      transform: scale(1.1);
     }
 
     #randomButton {
-      padding: 12px 25px;
-      font-size: 1.1rem;
-      background: linear-gradient(145deg, #238636, #28a745);
-      color: #f0f6fc;
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      font-weight: bold;
+      background: linear-gradient(135deg, #ff5656, #ff3838);
+      color: #fff;
       border: none;
       border-radius: 30px;
       cursor: pointer;
-      transition: background 0.3s ease, transform 0.2s ease;
+      transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+      box-shadow: 0 4px 15px rgba(255, 56, 56, 0.5);
     }
 
     #randomButton:hover {
-      background: linear-gradient(145deg, #28a745, #2ea043);
-      transform: scale(1.05);
+      background: linear-gradient(135deg, #ff3838, #ff1e1e);
+      transform: scale(1.08);
+      box-shadow: 0 6px 20px rgba(255, 56, 56, 0.7);
     }
 
     @keyframes blink {
@@ -72,9 +87,8 @@
       }
     }
 
-    /* Добавление легкого светящегося эффекта для имени */
     #nameDisplay.active {
-      text-shadow: 0 0 10px #58a6ff, 0 0 20px #58a6ff, 0 0 30px #58a6ff;
+      animation: blink 1s infinite;
     }
   </style>
 </head>
